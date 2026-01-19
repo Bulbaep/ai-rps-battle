@@ -35,7 +35,9 @@ game_state = {
     'gpt_thought': '',
     'is_playing': False,
     'claude_history': [],  # Track last choices for anti-repetition
-    'gpt_history': []      # Track last choices for anti-repetition
+    'gpt_history': [],      # Track last choices for anti-repetition
+    'countdown': 0,         # Countdown timer for betting pause
+    'is_countdown': False   # Whether we're in countdown mode
 }
 
 logs = []
@@ -317,7 +319,17 @@ def play_match():
     log_message("=" * 60)
     
     save_game_state()
-    time.sleep(config.MATCH_DELAY)
+    
+    # Betting countdown - 20 seconds before next match
+    log_message("⏸️  BETTING PAUSE - Place your bets!")
+    game_state['is_countdown'] = True
+    for i in range(20, 0, -1):
+        game_state['countdown'] = i
+        save_game_state()
+        time.sleep(1)
+    game_state['is_countdown'] = False
+    game_state['countdown'] = 0
+    save_game_state()
 
 def game_loop():
     """Main game loop"""

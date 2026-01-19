@@ -170,6 +170,34 @@
             font-size: 40px;
             color: #666;
             font-weight: bold;
+            position: relative;
+        }
+
+        .countdown-display {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            display: none;
+            white-space: nowrap;
+        }
+
+        .countdown-display.active {
+            display: block;
+            animation: pulse-countdown 1s infinite;
+        }
+
+        @keyframes pulse-countdown {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
         }
 
         .current-score {
@@ -505,7 +533,12 @@
                     <div class="choice-text" id="claudeChoiceText">Waiting...</div>
                 </div>
 
-                <div class="vs-divider">VS</div>
+                <div class="vs-divider">
+                    <div class="countdown-display" id="countdownDisplay">
+                        Next match in: <span id="countdownTimer">20</span>s
+                    </div>
+                    VS
+                </div>
 
                 <div class="player">
                     <div class="player-name gpt-name">GPT</div>
@@ -676,6 +709,17 @@
                 }
                 if (state.gpt_thought) {
                     document.getElementById('gptThought').textContent = state.gpt_thought;
+                }
+
+                // Countdown display
+                const countdownDisplay = document.getElementById('countdownDisplay');
+                const countdownTimer = document.getElementById('countdownTimer');
+                
+                if (state.is_countdown && state.countdown > 0) {
+                    countdownTimer.textContent = state.countdown;
+                    countdownDisplay.classList.add('active');
+                } else {
+                    countdownDisplay.classList.remove('active');
                 }
 
                 // Sidebar stats
