@@ -75,17 +75,11 @@ def get_claude_choice():
         # Random thought
         game_state['claude_thought'] = random.choice(config.CLAUDE_THOUGHTS)
         
-        # Build history context
+        # Build history context (own history only)
         history_text = ""
         if len(game_state['claude_history']) > 0:
             recent = game_state['claude_history'][-2:]  # Last 2 choices
             history_text = f"Your last choices were: {', '.join(recent)}. "
-        
-        # Build opponent history
-        opponent_text = ""
-        if len(game_state['gpt_history']) > 0:
-            recent_opp = game_state['gpt_history'][-2:]
-            opponent_text = f"Your opponent's last choices were: {', '.join(recent_opp)}. "
         
         # Anti-repetition rule
         forbidden = None
@@ -98,8 +92,8 @@ def get_claude_choice():
         if forbidden:
             forbidden_text = f"IMPORTANT: You have chosen {forbidden} twice in a row. You MUST choose something different this time (not {forbidden}). "
         
-        # Build full prompt
-        prompt = f"{history_text}{opponent_text}{forbidden_text}You are playing rock-paper-scissors. Make a strategic choice: rock, paper, or scissors. Reply with ONLY one word."
+        # Build full prompt (no opponent history)
+        prompt = f"{history_text}{forbidden_text}You are playing rock-paper-scissors. Make a choice: rock, paper, or scissors. Reply with ONLY one word."
         
         message = anthropic_client.messages.create(
             model=config.CLAUDE_MODEL,
@@ -149,17 +143,11 @@ def get_gpt_choice():
         # Random thought
         game_state['gpt_thought'] = random.choice(config.GPT_THOUGHTS)
         
-        # Build history context
+        # Build history context (own history only)
         history_text = ""
         if len(game_state['gpt_history']) > 0:
             recent = game_state['gpt_history'][-2:]  # Last 2 choices
             history_text = f"Your last choices were: {', '.join(recent)}. "
-        
-        # Build opponent history
-        opponent_text = ""
-        if len(game_state['claude_history']) > 0:
-            recent_opp = game_state['claude_history'][-2:]
-            opponent_text = f"Your opponent's last choices were: {', '.join(recent_opp)}. "
         
         # Anti-repetition rule
         forbidden = None
@@ -172,8 +160,8 @@ def get_gpt_choice():
         if forbidden:
             forbidden_text = f"IMPORTANT: You have chosen {forbidden} twice in a row. You MUST choose something different this time (not {forbidden}). "
         
-        # Build full prompt
-        prompt = f"{history_text}{opponent_text}{forbidden_text}You are playing rock-paper-scissors. Make a strategic choice: rock, paper, or scissors. Reply with ONLY one word."
+        # Build full prompt (no opponent history)
+        prompt = f"{history_text}{forbidden_text}You are playing rock-paper-scissors. Make a choice: rock, paper, or scissors. Reply with ONLY one word."
         
         response = openai.chat.completions.create(
             model=config.GPT_MODEL,
