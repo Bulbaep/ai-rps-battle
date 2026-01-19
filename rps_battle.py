@@ -178,7 +178,7 @@ def get_gpt_choice():
         response = openai.chat.completions.create(
             model=config.GPT_MODEL,
             max_tokens=20,
-            temperature=2.0,
+            temperature=1.1,
             messages=[{
                 "role": "user",
                 "content": prompt
