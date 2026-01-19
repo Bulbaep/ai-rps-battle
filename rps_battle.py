@@ -232,6 +232,11 @@ def play_round():
     game_state['current_round'] += 1
     round_num = game_state['current_round']
     
+    # Reset choices for visual feedback
+    game_state['last_claude_choice'] = None
+    game_state['last_gpt_choice'] = None
+    save_game_state()
+    
     log_message(f"🎮 ROUND {round_num} - START")
     game_state['current_status'] = f'Round {round_num} in progress...'
     save_game_state()

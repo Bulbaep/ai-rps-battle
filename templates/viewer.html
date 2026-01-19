@@ -154,6 +154,22 @@
             animation: pulse 2s infinite;
         }
 
+        .thinking-emoji {
+            font-size: 60px;
+            animation: pulse-thinking 1.5s infinite;
+        }
+
+        @keyframes pulse-thinking {
+            0%, 100% { 
+                transform: scale(1) rotate(-10deg);
+                opacity: 0.8;
+            }
+            50% { 
+                transform: scale(1.2) rotate(10deg);
+                opacity: 1;
+            }
+        }
+
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -164,6 +180,19 @@
             color: #888;
             text-transform: uppercase;
             letter-spacing: 2px;
+        }
+
+        .thinking-text {
+            font-size: 16px;
+            color: #ffd700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: blink-thinking 1s infinite;
+        }
+
+        @keyframes blink-thinking {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
         }
 
         .vs-divider {
@@ -684,19 +713,25 @@
 
                 // Choices
                 if (state.last_claude_choice) {
-                    document.getElementById('claudeChoice').textContent = choiceEmojis[state.last_claude_choice];
+                    document.getElementById('claudeChoice').innerHTML = choiceEmojis[state.last_claude_choice];
+                    document.getElementById('claudeChoice').className = 'choice-display';
                     document.getElementById('claudeChoiceText').textContent = state.last_claude_choice.toUpperCase();
+                    document.getElementById('claudeChoiceText').className = 'choice-text';
                 } else {
-                    document.getElementById('claudeChoice').textContent = '❓';
-                    document.getElementById('claudeChoiceText').textContent = 'Thinking...';
+                    document.getElementById('claudeChoice').innerHTML = '<div class="thinking-emoji">🤔</div>';
+                    document.getElementById('claudeChoice').className = 'choice-display';
+                    document.getElementById('claudeChoiceText').innerHTML = '<span class="thinking-text">THINKING...</span>';
                 }
 
                 if (state.last_gpt_choice) {
-                    document.getElementById('gptChoice').textContent = choiceEmojis[state.last_gpt_choice];
+                    document.getElementById('gptChoice').innerHTML = choiceEmojis[state.last_gpt_choice];
+                    document.getElementById('gptChoice').className = 'choice-display';
                     document.getElementById('gptChoiceText').textContent = state.last_gpt_choice.toUpperCase();
+                    document.getElementById('gptChoiceText').className = 'choice-text';
                 } else {
-                    document.getElementById('gptChoice').textContent = '❓';
-                    document.getElementById('gptChoiceText').textContent = 'Thinking...';
+                    document.getElementById('gptChoice').innerHTML = '<div class="thinking-emoji">🤔</div>';
+                    document.getElementById('gptChoice').className = 'choice-display';
+                    document.getElementById('gptChoiceText').innerHTML = '<span class="thinking-text">THINKING...</span>';
                 }
 
                 // Result
