@@ -175,35 +175,37 @@
         .current-score {
             text-align: center;
             font-size: 28px;
-            margin: 30px 0;
-            padding: 20px;
-            background: #1a1a1a;
-            border-radius: 10px;
-            border: 2px solid #333;
-            flex: 1;
-            margin-right: 15px;
+            margin: 20px 0 10px 0;
+            padding: 0;
+        }
+
+        .score-label {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .score-numbers {
+            font-size: 36px;
+            font-weight: bold;
         }
 
         .betting-section {
             text-align: center;
             font-size: 28px;
-            margin: 30px 0;
-            padding: 20px;
+            margin: 30px auto;
+            padding: 25px;
             background: #1a1a1a;
             border-radius: 10px;
             border: 2px solid #ffd700;
-            flex: 1;
-            margin-left: 15px;
             position: relative;
+            max-width: 700px;
+            width: 90%;
         }
 
         .betting-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: stretch;
+            display: block;
             width: 100%;
-            max-width: 800px;
-            margin: 30px auto;
         }
 
         .betting-title {
@@ -512,44 +514,42 @@
                 </div>
             </div>
 
-            <div class="betting-container">
-                <div class="current-score">
-                    <div class="score-label">Current Match Score</div>
-                    <div class="score-numbers">
-                        <span class="claude-score" id="claudeScore">0</span>
-                        <span style="color: #666;"> - </span>
-                        <span class="gpt-score" id="gptScore">0</span>
-                    </div>
-                </div>
-
-                <div class="betting-section">
-                    <div class="betting-title">🎲 PLACE YOUR BETS</div>
-                    
-                    <div class="bet-buttons">
-                        <button class="bet-button bet-claude" disabled>
-                            BET CLAUDE
-                        </button>
-                        <button class="bet-button bet-gpt" disabled>
-                            BET GPT
-                        </button>
-                    </div>
-
-                    <div class="bet-odds">
-                        <div class="odd-item">
-                            <div class="odd-label">Claude Payout</div>
-                            <div class="odd-value claude-odd" id="claudeOdds">6.67x</div>
-                        </div>
-                        <div class="odd-item">
-                            <div class="odd-label">GPT Payout</div>
-                            <div class="odd-value gpt-odd" id="gptOdds">1.18x</div>
-                        </div>
-                    </div>
-
-                    <div class="coming-soon">COMING SOON</div>
+            <div class="current-score">
+                <div class="score-label">Current Match Score</div>
+                <div class="score-numbers">
+                    <span class="claude-score" id="claudeScore">0</span>
+                    <span style="color: #666;"> - </span>
+                    <span class="gpt-score" id="gptScore">0</span>
                 </div>
             </div>
 
             <div class="result-display" id="resultDisplay"></div>
+
+            <div class="betting-section">
+                <div class="betting-title">🎲 PLACE YOUR BETS</div>
+                
+                <div class="bet-buttons">
+                    <button class="bet-button bet-claude" disabled>
+                        BET CLAUDE
+                    </button>
+                    <button class="bet-button bet-gpt" disabled>
+                        BET GPT
+                    </button>
+                </div>
+
+                <div class="bet-odds">
+                    <div class="odd-item">
+                        <div class="odd-label">Claude Payout</div>
+                        <div class="odd-value claude-odd" id="claudeOdds">6.67x</div>
+                    </div>
+                    <div class="odd-item">
+                        <div class="odd-label">GPT Payout</div>
+                        <div class="odd-value gpt-odd" id="gptOdds">1.18x</div>
+                    </div>
+                </div>
+
+                <div class="coming-soon">COMING SOON</div>
+            </div>
         </div>
 
         <!-- COLONNE DROITE - AI Thoughts & Stats -->
