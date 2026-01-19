@@ -75,6 +75,9 @@ def get_claude_choice():
         # Random thought
         game_state['claude_thought'] = random.choice(config.CLAUDE_THOUGHTS)
         
+        # Add random seed for variety
+        seed = random.randint(1, 1000000)
+        
         # Build history context (own history only)
         history_text = ""
         if len(game_state['claude_history']) > 0:
@@ -92,8 +95,8 @@ def get_claude_choice():
         if forbidden:
             forbidden_text = f"IMPORTANT: You have chosen {forbidden} twice in a row. You MUST choose something different this time (not {forbidden}). "
         
-        # Build full prompt (no opponent history)
-        prompt = f"{history_text}{forbidden_text}You are playing rock-paper-scissors. Make a choice: rock, paper, or scissors. Reply with ONLY one word."
+        # Build full prompt with random seed for desynchronization
+        prompt = f"Random seed: {seed}. {history_text}{forbidden_text}Choose randomly and unpredictably: rock, paper, or scissors. Reply with ONLY one word."
         
         message = anthropic_client.messages.create(
             model=config.CLAUDE_MODEL,
@@ -143,6 +146,9 @@ def get_gpt_choice():
         # Random thought
         game_state['gpt_thought'] = random.choice(config.GPT_THOUGHTS)
         
+        # Add random seed for variety (different range than Claude)
+        seed = random.randint(5000000, 6000000)
+        
         # Build history context (own history only)
         history_text = ""
         if len(game_state['gpt_history']) > 0:
@@ -160,13 +166,13 @@ def get_gpt_choice():
         if forbidden:
             forbidden_text = f"IMPORTANT: You have chosen {forbidden} twice in a row. You MUST choose something different this time (not {forbidden}). "
         
-        # Build full prompt (no opponent history)
-        prompt = f"{history_text}{forbidden_text}You are playing rock-paper-scissors. Make a choice: rock, paper, or scissors. Reply with ONLY one word."
+        # Build full prompt with random seed for desynchronization (different wording than Claude)
+        prompt = f"Random seed: {seed}. {history_text}{forbidden_text}Pick unpredictably: rock, paper, or scissors. Reply with ONLY one word."
         
         response = openai.chat.completions.create(
             model=config.GPT_MODEL,
             max_tokens=20,
-            temperature=1.1,
+            temperature=1.8,  # Increased from 1.1 to break synchronization
             messages=[{
                 "role": "user",
                 "content": prompt
