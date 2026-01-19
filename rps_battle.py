@@ -346,6 +346,11 @@ def index():
     """Serve main page"""
     return render_template('viewer.html')
 
+@app.route('/viewer.html')
+def viewer():
+    """Serve viewer page (for pinned PumpFun link)"""
+    return render_template('viewer.html')
+
 @app.route('/api/state')
 def get_state():
     """Get current game state"""
