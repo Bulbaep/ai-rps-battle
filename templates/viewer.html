@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 AI RPS BATTLE - Claude vs GPT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            height: 100vh;
+            gap: 2px;
+            background: #1a1a1a;
+        }
+
+        /* COLONNE GAUCHE - Terminal */
+        .terminal {
+            background: #0d0d0d;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 2px solid #333;
+        }
+
+        .terminal-header {
+            color: #00ff00;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .log-entry {
+            font-size: 13px;
+            color: #00ff00;
+            margin-bottom: 5px;
+            line-height: 1.5;
+        }
+
+        .log-entry:hover {
+            background: #1a1a1a;
+        }
+
+        /* COLONNE CENTRE - Zone de jeu */
+        .game-area {
+            background: #111;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+        }
+
+        .game-title {
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            background: linear-gradient(90deg, #4a9eff, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contract-address {
+            text-align: center;
+            margin-bottom: 25px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #888;
+            cursor: pointer;
+            padding: 8px 15px;
+            background: #1a1a1a;
+            border-radius: 6px;
+            display: inline-block;
+            transition: all 0.2s;
+            user-select: all;
+        }
+
+        .contract-address:hover {
+            background: #252525;
+            color: #aaa;
+        }
+
+        .contract-address:active {
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        .contract-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .match-info {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #888;
+        }
+
+        .battle-zone {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin: 30px 0;
+            padding: 40px;
+            background: #1a1a1a;
+            border-radius: 15px;
+            border: 2px solid #333;
+        }
+
+        .player {
+            text-align: center;
+            flex: 1;
+        }
+
+        .player-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .claude-name {
+            color: #4a9eff;
+        }
+
+        .gpt-name {
+            color: #ff6b35;
+        }
+
+        .choice-display {
+            font-size: 80px;
+            margin: 20px 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .choice-text {
+            font-size: 20px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .vs-divider {
+            font-size: 40px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .current-score {
+            text-align: center;
+            font-size: 28px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 2px solid #333;
+        }
+
+        .score-label {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .score-numbers {
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        .claude-score {
+            color: #4a9eff;
+        }
+
+        .gpt-score {
+            color: #ff6b35;
+        }
+
+        .result-display {
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 60px;
+        }
+
+        .result-win {
+            background: #1a4d1a;
+            color: #00ff00;
+        }
+
+        .result-tie {
+            background: #4d4d1a;
+            color: #ffff00;
+        }
+
+        .overall-stats {
+            text-align: center;
+            margin-top: 30px;
+            padding: 25px;
+            background: #0d0d0d;
+            border-radius: 10px;
+            border: 2px solid #333;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .overall-stats h3 {
+            color: #888;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-box {
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        /* COLONNE DROITE - AI Thoughts & Stats */
+        .sidebar {
+            background: #0d0d0d;
+            padding: 20px;
+            border-left: 2px solid #333;
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            color: #888;
+        }
+
+        .thought-box {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: #1a1a1a;
+            border-left: 4px solid;
+            min-height: 60px;
+        }
+
+        .claude-thought {
+            border-left-color: #4a9eff;
+        }
+
+        .gpt-thought {
+            border-left-color: #ff6b35;
+        }
+
+        .thought-label {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .thought-text {
+            font-size: 14px;
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .mini-stat {
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mini-stat-label {
+            color: #aaa;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .mini-stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Loading animation */
+        .loading {
+            opacity: 0.5;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- COLONNE GAUCHE - Live Terminal -->
+        <div class="terminal">
+            <div class="terminal-header">📡 LIVE TERMINAL</div>
+            <div id="logs"></div>
+        </div>
+
+        <!-- COLONNE CENTRE - Zone de jeu -->
+        <div class="game-area">
+            <div class="game-title">AI RPS BATTLE (BO3) - Claude vs GPT</div>
+            
+            <div class="contract-container">
+                <div class="contract-address" id="contractAddress" onclick="copyContract()">
+                    JEAJEkFgSpVHJGeSbpzEpBhkpiQT7uPeJffb1D9qpump
+                </div>
+            </div>
+            
+            <div class="match-info" id="matchInfo">
+                Match #<span id="matchNumber">0</span> - Round <span id="roundNumber">0</span>
+            </div>
+
+            <div class="battle-zone">
+                <div class="player">
+                    <div class="player-name claude-name">CLAUDE</div>
+                    <div class="choice-display" id="claudeChoice">❓</div>
+                    <div class="choice-text" id="claudeChoiceText">Waiting...</div>
+                </div>
+
+                <div class="vs-divider">VS</div>
+
+                <div class="player">
+                    <div class="player-name gpt-name">GPT</div>
+                    <div class="choice-display" id="gptChoice">❓</div>
+                    <div class="choice-text" id="gptChoiceText">Waiting...</div>
+                </div>
+            </div>
+
+            <div class="current-score">
+                <div class="score-label">Current Match Score</div>
+                <div class="score-numbers">
+                    <span class="claude-score" id="claudeScore">0</span>
+                    <span style="color: #666;"> - </span>
+                    <span class="gpt-score" id="gptScore">0</span>
+                </div>
+            </div>
+
+            <div class="result-display" id="resultDisplay"></div>
+        </div>
+
+        <!-- COLONNE DROITE - AI Thoughts & Stats -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">🧠 AI THOUGHTS</div>
+                
+                <div class="thought-box claude-thought">
+                    <div class="thought-label">Claude Haiku 4.5</div>
+                    <div class="thought-text" id="claudeThought">Initializing neural networks...</div>
+                </div>
+
+                <div class="thought-box gpt-thought">
+                    <div class="thought-label">GPT-4o-mini</div>
+                    <div class="thought-text" id="gptThought">Booting up algorithms...</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-title">📊 BATTLE STATISTICS</div>
+                
+                <div class="mini-stat">
+                    <span class="mini-stat-label">Claude Wins</span>
+                    <span class="mini-stat-value claude-score" id="sidebarClaudeWins">0</span>
+                </div>
+                
+                <div class="mini-stat">
+                    <span class="mini-stat-label">GPT Wins</span>
+                    <span class="mini-stat-value gpt-score" id="sidebarGptWins">0</span>
+                </div>
+                
+                <div class="mini-stat">
+                    <span class="mini-stat-label">Claude Win Rate</span>
+                    <span class="mini-stat-value claude-score" id="sidebarClaudeWinRate">0%</span>
+                </div>
+
+                <div class="mini-stat">
+                    <span class="mini-stat-label">GPT Win Rate</span>
+                    <span class="mini-stat-value gpt-score" id="sidebarGptWinRate">0%</span>
+                </div>
+
+                <div class="mini-stat">
+                    <span class="mini-stat-label">Last Winner</span>
+                    <span class="mini-stat-value" id="sidebarLastWinner">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Copy contract to clipboard
+        function copyContract() {
+            const contract = 'JEAJEkFgSpVHJGeSbpzEpBhkpiQT7uPeJffb1D9qpump';
+            navigator.clipboard.writeText(contract).then(() => {
+                const elem = document.getElementById('contractAddress');
+                const originalColor = elem.style.color;
+                elem.style.color = '#00ff00';
+                setTimeout(() => {
+                    elem.style.color = originalColor;
+                }, 200);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        const choiceEmojis = {
+            'rock': '👊',
+            'paper': '✋',
+            'scissors': '✌️'
+        };
+
+        // Update game state
+        async function updateState() {
+            try {
+                const response = await fetch('/api/state');
+                const state = await response.json();
+
+                // Match info
+                document.getElementById('matchNumber').textContent = state.current_match;
+                document.getElementById('roundNumber').textContent = state.current_round;
+
+                // Current scores
+                document.getElementById('claudeScore').textContent = state.claude_score;
+                document.getElementById('gptScore').textContent = state.gpt_score;
+
+                // Choices
+                if (state.last_claude_choice) {
+                    document.getElementById('claudeChoice').textContent = choiceEmojis[state.last_claude_choice];
+                    document.getElementById('claudeChoiceText').textContent = state.last_claude_choice.toUpperCase();
+                } else {
+                    document.getElementById('claudeChoice').textContent = '❓';
+                    document.getElementById('claudeChoiceText').textContent = 'Thinking...';
+                }
+
+                if (state.last_gpt_choice) {
+                    document.getElementById('gptChoice').textContent = choiceEmojis[state.last_gpt_choice];
+                    document.getElementById('gptChoiceText').textContent = state.last_gpt_choice.toUpperCase();
+                } else {
+                    document.getElementById('gptChoice').textContent = '❓';
+                    document.getElementById('gptChoiceText').textContent = 'Thinking...';
+                }
+
+                // Result
+                const resultDiv = document.getElementById('resultDisplay');
+                if (state.last_result) {
+                    if (state.last_result === 'tie') {
+                        resultDiv.textContent = '🤝 TIE - Play again!';
+                        resultDiv.className = 'result-display result-tie';
+                    } else if (state.last_result === 'claude') {
+                        resultDiv.textContent = '🎉 Claude wins this round!';
+                        resultDiv.className = 'result-display result-win';
+                    } else {
+                        resultDiv.textContent = '🎉 GPT wins this round!';
+                        resultDiv.className = 'result-display result-win';
+                    }
+                } else {
+                    resultDiv.textContent = '';
+                    resultDiv.className = 'result-display';
+                }
+
+                // AI Thoughts
+                if (state.claude_thought) {
+                    document.getElementById('claudeThought').textContent = state.claude_thought;
+                }
+                if (state.gpt_thought) {
+                    document.getElementById('gptThought').textContent = state.gpt_thought;
+                }
+
+                // Sidebar stats
+                document.getElementById('sidebarClaudeWins').textContent = state.total_claude_wins;
+                document.getElementById('sidebarGptWins').textContent = state.total_gpt_wins;
+                
+                // Calculate win rates
+                const totalMatches = state.total_matches;
+                const claudeWinRate = totalMatches > 0 ? Math.round((state.total_claude_wins / totalMatches) * 100) : 0;
+                const gptWinRate = totalMatches > 0 ? Math.round((state.total_gpt_wins / totalMatches) * 100) : 0;
+                
+                document.getElementById('sidebarClaudeWinRate').textContent = claudeWinRate + '%';
+                document.getElementById('sidebarGptWinRate').textContent = gptWinRate + '%';
+                
+                if (state.last_winner) {
+                    const winnerText = state.last_winner.toUpperCase();
+                    document.getElementById('sidebarLastWinner').textContent = winnerText;
+                    if (state.last_winner === 'claude') {
+                        document.getElementById('sidebarLastWinner').style.color = '#4a9eff';
+                    } else {
+                        document.getElementById('sidebarLastWinner').style.color = '#ff6b35';
+                    }
+                } else {
+                    document.getElementById('sidebarLastWinner').textContent = '-';
+                    document.getElementById('sidebarLastWinner').style.color = '#888';
+                }
+
+            } catch (error) {
+                console.error('Error updating state:', error);
+            }
+        }
+
+        // Update logs
+        async function updateLogs() {
+            try {
+                const response = await fetch('/api/logs');
+                const logs = await response.json();
+
+                const logsDiv = document.getElementById('logs');
+                logsDiv.innerHTML = logs.map(log => 
+                    `<div class="log-entry">${log}</div>`
+                ).join('');
+
+                // Auto-scroll to bottom
+                logsDiv.scrollTop = logsDiv.scrollHeight;
+            } catch (error) {
+                console.error('Error updating logs:', error);
+            }
+        }
+
+        // Update everything
+        function updateAll() {
+            updateState();
+            updateLogs();
+        }
+
+        // Initial update
+        updateAll();
+
+        // Auto-refresh every 2 seconds
+        setInterval(updateAll, 2000);
+    </script>
+</body>
+</html>
