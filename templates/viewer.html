@@ -180,6 +180,118 @@
             background: #1a1a1a;
             border-radius: 10px;
             border: 2px solid #333;
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .betting-section {
+            text-align: center;
+            font-size: 28px;
+            margin: 30px 0;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 2px solid #ffd700;
+            flex: 1;
+            margin-left: 15px;
+            position: relative;
+        }
+
+        .betting-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            width: 100%;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        .betting-title {
+            color: #ffd700;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bet-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .bet-button {
+            padding: 15px 30px;
+            border-radius: 8px;
+            border: 2px solid;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: not-allowed;
+            transition: all 0.3s;
+            flex: 1;
+            max-width: 180px;
+            opacity: 0.7;
+        }
+
+        .bet-claude {
+            background: linear-gradient(135deg, #1a4d8f, #2a5da0);
+            border-color: #4a9eff;
+            color: #fff;
+        }
+
+        .bet-gpt {
+            background: linear-gradient(135deg, #8f3d1a, #a04d2a);
+            border-color: #ff6b35;
+            color: #fff;
+        }
+
+        .bet-odds {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .odd-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .odd-label {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 3px;
+        }
+
+        .odd-value {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .odd-value.claude-odd {
+            color: #4a9eff;
+        }
+
+        .odd-value.gpt-odd {
+            color: #ff6b35;
+        }
+
+        .coming-soon {
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #ffd700, #ffed4e);
+            color: #000;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .score-label {
@@ -400,12 +512,40 @@
                 </div>
             </div>
 
-            <div class="current-score">
-                <div class="score-label">Current Match Score</div>
-                <div class="score-numbers">
-                    <span class="claude-score" id="claudeScore">0</span>
-                    <span style="color: #666;"> - </span>
-                    <span class="gpt-score" id="gptScore">0</span>
+            <div class="betting-container">
+                <div class="current-score">
+                    <div class="score-label">Current Match Score</div>
+                    <div class="score-numbers">
+                        <span class="claude-score" id="claudeScore">0</span>
+                        <span style="color: #666;"> - </span>
+                        <span class="gpt-score" id="gptScore">0</span>
+                    </div>
+                </div>
+
+                <div class="betting-section">
+                    <div class="betting-title">🎲 PLACE YOUR BETS</div>
+                    
+                    <div class="bet-buttons">
+                        <button class="bet-button bet-claude" disabled>
+                            BET CLAUDE
+                        </button>
+                        <button class="bet-button bet-gpt" disabled>
+                            BET GPT
+                        </button>
+                    </div>
+
+                    <div class="bet-odds">
+                        <div class="odd-item">
+                            <div class="odd-label">Claude Payout</div>
+                            <div class="odd-value claude-odd" id="claudeOdds">6.67x</div>
+                        </div>
+                        <div class="odd-item">
+                            <div class="odd-label">GPT Payout</div>
+                            <div class="odd-value gpt-odd" id="gptOdds">1.18x</div>
+                        </div>
+                    </div>
+
+                    <div class="coming-soon">COMING SOON</div>
                 </div>
             </div>
 
@@ -549,6 +689,28 @@
                 
                 document.getElementById('sidebarClaudeWinRate').textContent = claudeWinRate + '%';
                 document.getElementById('sidebarGptWinRate').textContent = gptWinRate + '%';
+                
+                // Calculate betting odds (inverse of win rate)
+                // Higher win rate = lower payout, lower win rate = higher payout
+                let claudeOdds = 2.0; // Default
+                let gptOdds = 2.0;
+                
+                if (totalMatches > 5) { // Only show odds after 5+ matches
+                    if (claudeWinRate > 0) {
+                        claudeOdds = (100 / claudeWinRate).toFixed(2);
+                    } else {
+                        claudeOdds = 10.0; // Max odds if no wins
+                    }
+                    
+                    if (gptWinRate > 0) {
+                        gptOdds = (100 / gptWinRate).toFixed(2);
+                    } else {
+                        gptOdds = 10.0; // Max odds if no wins
+                    }
+                }
+                
+                document.getElementById('claudeOdds').textContent = claudeOdds + 'x';
+                document.getElementById('gptOdds').textContent = gptOdds + 'x';
                 
                 if (state.last_winner) {
                     const winnerText = state.last_winner.toUpperCase();
