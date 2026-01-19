@@ -544,6 +544,119 @@
             0%, 100% { opacity: 0.5; }
             50% { opacity: 1; }
         }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .terminal {
+                display: none; /* Hide terminal on mobile for cleaner view */
+            }
+
+            .game-area {
+                width: 100%;
+                max-width: 100%;
+                padding: 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                max-width: 100%;
+                padding: 15px;
+                order: 3; /* Put sidebar at bottom */
+            }
+
+            .game-title {
+                font-size: 24px;
+            }
+
+            .contract-address {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .match-info {
+                font-size: 16px;
+            }
+
+            .battle-zone {
+                padding: 20px;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .vs-divider {
+                font-size: 30px;
+                transform: rotate(90deg);
+            }
+
+            .countdown-display {
+                top: -40px;
+                font-size: 14px;
+                padding: 6px 15px;
+            }
+
+            .choice-display {
+                font-size: 60px;
+                min-height: 80px;
+            }
+
+            .thinking-emoji {
+                font-size: 50px;
+            }
+
+            .choice-text, .thinking-text {
+                font-size: 16px;
+            }
+
+            .score-numbers {
+                font-size: 28px;
+            }
+
+            .betting-section {
+                max-width: 100%;
+                width: 95%;
+                padding: 20px;
+            }
+
+            .betting-title {
+                font-size: 18px;
+            }
+
+            .bet-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .bet-button {
+                max-width: 100%;
+                font-size: 16px;
+            }
+
+            .sidebar-section {
+                margin-bottom: 15px;
+            }
+
+            .thought-box {
+                padding: 12px;
+            }
+
+            .thought-text {
+                font-size: 13px;
+            }
+
+            .mini-stat-label {
+                font-size: 14px;
+            }
+
+            .mini-stat-value {
+                font-size: 20px;
+            }
+        }
     </style>
 </head>
 <body>
