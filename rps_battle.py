@@ -375,13 +375,13 @@ def init_files():
     if not os.path.exists('game_state.json'):
         save_game_state()
 
+# Initialize files and start game loop automatically
+init_files()
+
+# Start game loop in background thread (auto-start for production)
+game_thread = Thread(target=game_loop, daemon=True)
+game_thread.start()
+
 if __name__ == '__main__':
-    # Initialize files
-    init_files()
-    
-    # Start game loop in background thread
-    game_thread = Thread(target=game_loop, daemon=True)
-    game_thread.start()
-    
-    # Start Flask server
+    # Start Flask server (only when running locally)
     app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)
