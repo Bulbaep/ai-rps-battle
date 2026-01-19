@@ -545,116 +545,164 @@
             50% { opacity: 1; }
         }
 
-        /* MOBILE RESPONSIVE */
+        /* MOBILE RESPONSIVE - CLEAN FULLSCREEN */
         @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+
             .container {
                 flex-direction: column;
                 height: auto;
-                min-height: 100vh;
+                overflow-y: auto;
             }
 
             .terminal {
-                display: none; /* Hide terminal on mobile for cleaner view */
-            }
-
-            .game-area {
-                width: 100%;
-                max-width: 100%;
-                padding: 15px;
+                display: none; /* Hide terminal on mobile */
             }
 
             .sidebar {
-                width: 100%;
-                max-width: 100%;
-                padding: 15px;
-                order: 3; /* Put sidebar at bottom */
+                display: none; /* Hide sidebar on mobile */
+            }
+
+            .game-area {
+                width: 100vw;
+                max-width: 100vw;
+                padding: 20px 15px;
+                overflow-x: hidden;
             }
 
             .game-title {
-                font-size: 24px;
+                font-size: 20px;
+                margin-bottom: 10px;
+                line-height: 1.3;
             }
 
             .contract-address {
-                font-size: 12px;
-                padding: 6px 12px;
+                font-size: 10px;
+                padding: 5px 10px;
+                word-break: break-all;
             }
 
             .match-info {
-                font-size: 16px;
+                font-size: 14px;
+                margin-bottom: 15px;
             }
 
             .battle-zone {
-                padding: 20px;
+                width: 100%;
+                max-width: 100%;
+                padding: 15px;
+                margin: 10px 0;
                 flex-direction: column;
-                gap: 20px;
+                gap: 15px;
             }
 
-            .vs-divider {
-                font-size: 30px;
-                transform: rotate(90deg);
+            .player {
+                width: 100%;
             }
 
-            .countdown-display {
-                top: -40px;
-                font-size: 14px;
-                padding: 6px 15px;
+            .player-name {
+                font-size: 22px;
             }
 
             .choice-display {
-                font-size: 60px;
-                min-height: 80px;
+                font-size: 70px;
+                min-height: 90px;
             }
 
             .thinking-emoji {
-                font-size: 50px;
+                font-size: 60px;
             }
 
             .choice-text, .thinking-text {
-                font-size: 16px;
+                font-size: 18px;
+            }
+
+            .vs-divider {
+                font-size: 28px;
+                margin: 10px 0;
+            }
+
+            .countdown-display {
+                position: relative;
+                top: 0;
+                left: 0;
+                transform: none;
+                margin-bottom: 10px;
+                font-size: 14px;
+            }
+
+            .current-score {
+                margin: 15px 0;
+            }
+
+            .score-label {
+                font-size: 14px;
             }
 
             .score-numbers {
-                font-size: 28px;
+                font-size: 32px;
+            }
+
+            .result-display {
+                font-size: 18px;
+                padding: 12px;
+                margin: 15px 0;
             }
 
             .betting-section {
+                width: 100%;
                 max-width: 100%;
-                width: 95%;
-                padding: 20px;
+                padding: 20px 15px;
+                margin: 15px 0;
             }
 
             .betting-title {
                 font-size: 18px;
+                margin-bottom: 8px;
+            }
+
+            .token-info {
+                font-size: 12px;
+                margin-bottom: 12px;
             }
 
             .bet-buttons {
                 flex-direction: column;
-                gap: 10px;
+                gap: 12px;
+                margin-bottom: 15px;
             }
 
             .bet-button {
                 max-width: 100%;
-                font-size: 16px;
+                width: 100%;
+                padding: 15px 20px;
+                font-size: 18px;
             }
 
-            .sidebar-section {
-                margin-bottom: 15px;
+            .bet-odds {
+                flex-direction: row;
+                justify-content: space-around;
+                margin-top: 12px;
             }
 
-            .thought-box {
-                padding: 12px;
+            .odd-item {
+                flex: 1;
             }
 
-            .thought-text {
-                font-size: 13px;
+            .odd-label {
+                font-size: 11px;
             }
 
-            .mini-stat-label {
-                font-size: 14px;
+            .odd-value {
+                font-size: 18px;
             }
 
-            .mini-stat-value {
-                font-size: 20px;
+            .coming-soon {
+                font-size: 11px;
+                padding: 5px 15px;
+                bottom: -10px;
             }
         }
     </style>
